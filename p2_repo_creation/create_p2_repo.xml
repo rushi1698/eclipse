@@ -1,0 +1,44 @@
+<!--
+ * ==================================================================
+ * Ant script to create p2 repo.
+ *
+ * Copyright (c) 2025, @rushi1698 https://github.com/rushi1698
+ * ==================================================================
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CreateP2Repo" default="create.p2.repo" xmlns:p2="antlib:org.eclipse.equinox.p2.ant">
+
+    <property name="eclipse.home" value="/path/to/your/eclipse"/>
+    <property name="source.dir" value="path/to/eclipse/directory"/>
+    <property name="destination.dir" value="path/to/output/repository"/>
+    <property name="repository.name" value="MyP2Repository"/>
+
+    <path id="p2.classpath">
+        <fileset dir="${eclipse.home}/plugins">
+            <include name="org.eclipse.equinox.launcher*.jar"/>
+        </fileset>
+    </path>
+
+    <taskdef name="publish"
+             classname="org.eclipse.equinox.p2.publisher.ant.PublisherTask"
+             classpathref="p2.classpath"/>
+
+    <target name="create.p2.repo" description="Creates a p2 repository from a directory structure.">
+        <echo message="Creating p2 repository '${repository.name}' in '${destination.dir}' from source '${source.dir}'"/>
+
+        <p2:publish
+            repositoryName="${repository.name}"
+            metadataRepository="${destination.dir}"
+            artifactRepository="${destination.dir}"
+            source="${source.dir}"
+            publishArtifacts="true"
+            compress="true"
+            append="true" >
+        </p2:publish>
+    </target>
+
+    <target name="clean" description="Deletes the generated p2 repository.">
+        <delete dir="${destination.dir}"/>
+    </target>
+
+</project>
